@@ -1,7 +1,7 @@
  #-*- coding: UTF-8 -*-
 import datetime
 
-from flask import Flask
+from flask import Flask, request
 from flask import render_template
 
 from flask.ext.admin import Admin, BaseView, expose
@@ -23,6 +23,12 @@ class Menu(db.Model):
     def __unicode__(self):
         return 'hello'
 
+class OrderMeal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(64))
+    name = db.Column(db.String(64))
+    department = db.Column(db.String(128))
+
 class MenuView(ModelView):
     def is_accessible(self):
         return login.current_user.is_authenticated()
@@ -33,6 +39,21 @@ def index():
     '''定义方法'''
     today_menu = Menu.query.filter_by(date=get_today_weekname()).first().menu_str
     return render_template('book.html', date=get_today_str(), menu=today_menu)
+
+@app.route('/all/')
+def all_menus():
+    menu_list = Menu.query.filter_by()
+    dict = {}
+    for item in menu_list:
+        dict[item.date] = item.menu_str
+    return render_template('all_menus.html', menu_dict=dict)
+
+@app.route('/order/add', methods=['POST', 'GET'])
+def add_order():
+    order_meal = OrderMeal(name=request.json["name"], department=request.json["department"], date=get_today_str())
+    db.session.add(order_meal)
+    db.session.commit()
+    return "{}"
 
 def get_today_weekname():
     today = datetime.date.today()
@@ -47,6 +68,7 @@ def get_today_str():
 if __name__ == '__main__':
     admin = Admin(app)
     admin.add_view(ModelView(Menu, db.session, name=u'菜单'))
+    admin.add_view(ModelView(OrderMeal, db.session, name=u'订餐信息'))
 
     db.create_all()
     app.run('0.0.0.0', 8000)
