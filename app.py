@@ -9,6 +9,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.admin.contrib.sqla import ModelView
 from flask.ext import login
 
+from consts import *
+
 app = Flask(__name__) #实现一个Flask类的实例
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/cherry' #设置连接数据库地址
 app.config['SECRET_KEY'] = '123456790'  
@@ -38,7 +40,7 @@ class MenuView(ModelView):
 def index():
     '''定义方法'''
     today_menu = Menu.query.filter_by(date=get_today_weekname()).first().menu_str
-    return render_template('book.html', date=get_today_str(), menu=today_menu)
+    return render_template('book.html', date=get_today_str(), menu=today_menu, department_list=DEPARTMENT_LIST)
 
 @app.route('/all/')
 def all_menus():
@@ -46,7 +48,26 @@ def all_menus():
     dict = {}
     for item in menu_list:
         dict[item.date] = item.menu_str
-    return render_template('all_menus.html', menu_dict=dict)
+    menu_content_list = [] 
+    
+    for name in u'星期一 星期二 星期三 星期四 星期五 星期六 星期日'.split():
+        if dict.has_key(name):
+            menu_content = '%s: %s' % (name, dict[name])
+            menu_content_list.append(menu_content)
+    return render_template('all_menus.html', menu_list=menu_content_list)
+
+@app.route('/order/all')
+def all_order():
+     order_list = OrderMeal.query.filter_by(date=get_today_str())
+     order_dict = {}
+     for item in order_list:
+         if order_dict.has_key(item.department):
+             order_dict[item.department].append(item.name)
+         else:
+             order_dict[item.department] = [item.name]
+     print order_dict
+     return render_template('all_order.html', order_dict=order_dict)
+         
 
 @app.route('/order/add', methods=['POST', 'GET'])
 def add_order():

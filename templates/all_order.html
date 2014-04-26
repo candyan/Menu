@@ -37,15 +37,22 @@
         <h3>订餐系统</>
       </div>
 
-      <div class="panel panel-success">
-          <div class="panel-heading">
-              <h3 class="panel-title">一周菜单</h3>
-          </div>
-          {% for menu in menu_list %}
-          <div class="panel-body">
-          {{ menu }}
-          </div>
-          {% endfor %}
+      {% for key, vaule in order_dict.iteritems() %}
+      <div class="col-sm-4">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ key }}</h3>
+            </div>
+            <div class="panel-body">
+            {% for order in vaule %}
+               <p>{{ order }}</p>
+            {% endfor %}
+            </div>
+        </div>
+      </div>
+      {% endfor %}
+      <div>
+        <button id="submit" type="button" class="btn btn-lg btn-success">打印</button>
       </div>
     </div>
 
