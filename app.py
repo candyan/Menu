@@ -12,7 +12,7 @@ from flask.ext import login
 from consts import *
 
 app = Flask(__name__) #实现一个Flask类的实例
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/cherry' #设置连接数据库地址
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:cherry@localhost:3306/cherry' #设置连接数据库地址
 app.config['SECRET_KEY'] = '123456790'  
 db = SQLAlchemy(app) #实现SQLAlchemy 类的实例
 app.debug = True  #开启调试模式
