@@ -13,7 +13,7 @@ from consts import *
 
 app = Flask(__name__) #实现一个Flask类的实例
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:cherry@localhost:3306/cherry' #设置连接数据库地址
-app.config['SECRET_KEY'] = '123456790'  
+app.config['SECRET_KEY'] = '123456790'
 db = SQLAlchemy(app) #实现SQLAlchemy 类的实例
 app.debug = True  #开启调试模式
 
@@ -21,6 +21,9 @@ class Menu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(64), unique=True)
     menu_str = db.Column(db.String(128))
+
+    column_list = ('date', 'menu_str')
+    column_labels = dict(date=u'日期', menu_str=u'菜单')
 
     def __unicode__(self):
         return 'hello'
@@ -48,8 +51,8 @@ def all_menus():
     dict = {}
     for item in menu_list:
         dict[item.date] = item.menu_str
-    menu_content_list = [] 
-    
+    menu_content_list = []
+
     for name in u'星期一 星期二 星期三 星期四 星期五 星期六 星期日'.split():
         if dict.has_key(name):
             menu_content = '%s: %s' % (name, dict[name])
@@ -67,7 +70,7 @@ def all_order():
              order_dict[item.department] = [item.name]
      print order_dict
      return render_template('all_order.html', order_dict=order_dict)
-         
+
 
 @app.route('/order/add', methods=['POST', 'GET'])
 def add_order():
@@ -80,7 +83,7 @@ def get_today_weekname():
     today = datetime.date.today()
     week_list = u'星期一 星期二 星期三 星期四 星期五 星期六 星期日'.split()
     return week_list[today.weekday()]
-    
+
 def get_today_str():
     today = datetime.date.today()
     ISOFORMAT = '%Y 年 %m 月 %d 日'
