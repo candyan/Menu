@@ -21,6 +21,8 @@ apitest-reports/
 web-checkpage-reports/
 permdir_test/
 
+.ropeproject/
+
 .*.png
 
 artery_server_client
