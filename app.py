@@ -122,8 +122,7 @@ def all_order():
 def add_order():
     name = request.json["name"]
     department = request.json["department"]
-    date = get_today_str()
-    order_meal = OrderMeal(name=name, department=department, date=date)
+    order_meal = OrderMeal(name=name, department=department)
     db.session.add(order_meal)
     db.session.commit()
     return "{}"
