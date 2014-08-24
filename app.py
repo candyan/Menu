@@ -42,9 +42,14 @@ class Menu(db.Model):
 
 class OrderMeal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    create_time = db.Column(db.DateTime, default=datetime.datetime.now())
+    create_time = db.Column(db.DateTime)
     name = db.Column(db.String(64))
     department = db.Column(db.String(128))
+
+    def __init__(self, name, department, create_time=None):
+        self.create_time = create_time if create_time else datetime.datetime.now()
+        self.name = name
+        self.department = department
 
 
 class OrderMealView(ModelView):
