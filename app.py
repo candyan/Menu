@@ -153,5 +153,5 @@ if __name__ == '__main__':
     admin.add_view(OrderMealView(db.session, name=u'订餐信息'))
 
     db.create_all()
-    app.run('0.0.0.0', 8000)
+    app.run('0.0.0.0', 80)
 
